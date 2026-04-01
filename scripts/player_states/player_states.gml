@@ -23,8 +23,9 @@ function state_normal()
 		movespeed = approach(movespeed, 6, 0.3)
 	}
 	
-	//do_grab()
-	//do_taunt()
+	do_slap()
+	do_taunt()
+	image_speed = 0.35
 }
 
 function state_jump(){
@@ -67,7 +68,7 @@ function state_mach2(){
 	//	sprite_index = asset_get_index($"spr_{character}_mach2")
 		
 	//do_wallrun()
-	//do_grab()
+	do_slap()
 	
 	if key_jump2 && (grounded || groundedSlope)
 	{
@@ -91,7 +92,8 @@ function state_mach2(){
 		}
 	}
 	
-	//do_taunt()
+	do_taunt()
+	image_speed = 0.35
 }
 
 function state_mach3(){
@@ -139,7 +141,7 @@ function state_mach3(){
 	}
 	
 	//do_wallrun()
-	//do_grab()
+	do_slap()
 	
 	
 	if key_jump2 && (grounded || groundedSlope)
@@ -171,6 +173,82 @@ function state_mach3(){
 	}
 	
 	instakill = true
+	image_speed = 0.35
 	
-	//do_taunt()
+	do_taunt()
+}
+
+function state_slap(){
+	hsp = movespeed * xscale
+
+		
+	if sprite_index == spr_peppinilo_slap && animation_end()
+	{
+		movespeed = approach(movespeed, 12, 1)
+		image_index = 0
+		sprite_index = spr_peppinilo_slaploop
+	}
+		
+	if floor(image_index) >= 5
+		movespeed -= 0.7
+		
+	if movespeed <= 0
+	{
+		if !key_mach
+			state = "mach2"
+		else
+		{
+			movespeed = 0;
+			state = "normal"
+		}
+	}
+	
+	image_speed = 0.45
+	
+	instakill = true
+}
+
+
+function do_slap(){
+    if key_grab2
+    {
+		if key_up
+		{
+			//sprite_index = asset_get_index($"spr_{character}_uppercut1")
+			image_index = 0
+			//state = p_states.uppercut
+			vsp = -15
+		}
+		else
+		{
+			sprite_index = spr_peppinilo_slap
+			image_index = 0
+			state = "slap"
+			movespeed = 6
+		}
+    }
+}
+
+function do_taunt(){
+	if key_taunt2
+	{
+		savehsp = hsp
+		savevsp = vsp
+		savesprite = sprite_index
+		saveindex = image_index
+		savestate = state
+		
+		hsp = 0
+		vsp = 0
+		grav = 0
+		sprite_index = asset_get_index($"spr_{character}_taunts")
+		image_index = irandom(image_number - 1)
+		image_speed = 0
+		state = "nothing"
+		alarm[0] = 20
+	}
+}
+
+function state_nothing(){
+	
 }
