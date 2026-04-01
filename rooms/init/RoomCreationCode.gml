@@ -1,0 +1,1 @@
+room_goto(hub_inner1)

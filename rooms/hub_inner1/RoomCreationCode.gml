@@ -1,0 +1,1 @@
+audio_play_sound(mu_obelisk,1,1)
